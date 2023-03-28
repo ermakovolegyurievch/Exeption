@@ -1,30 +1,23 @@
 public class UserData {
-
-    public static String savePass;
-
-    public static void CheckUserData(String login, String password, String confirmPassword) {
-        if (CheckInsert(login)) {
-            System.out.println("Не корректный ввод логина");
+    public static void checkUserData(String login, String password, String confirmPassword) throws WrongLoginException, WrongPasswordException {
+        if (checkInsert(login)) {
+            throw new WrongLoginException("Не корректный ввод логина");
         }
-        if (login.length() > 20) try {
+
+        if (login.length() > 20) {
             throw new WrongLoginException("Слишком много символов");
-        } catch (WrongLoginException e) {
-            throw new RuntimeException(e);
         }
-        if (CheckInsert(password) || password.length() > 20) {
-            System.out.println("Не корректный ввод пароля");
-        } else {
-            savePass = password;
+
+        if (checkInsert(password) || password.length() > 20) {
+            throw new WrongLoginException("Не корректный ввод логина");
         }
-        try {
-            if (!confirmPassword.equals(savePass))
-                throw new WrongPasswordException("Пароли не совпадают");
-        } catch (WrongPasswordException e) {
-            throw new RuntimeException(e);
+
+        if (!confirmPassword.equals(password)) {
+            throw new WrongPasswordException("Пароли не совпадают");
         }
     }
 
-    public static boolean CheckInsert(String str) {
+    public static boolean checkInsert(String str) {
         return !str.matches("^[a-zA-Z_0-9]+$");
     }
 }
